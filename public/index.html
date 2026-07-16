@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jeff Goldblum — Official Site</title>
+<meta name="description" content="Official site of Jeff Goldblum. New music, visuals, and a direct line to the studio." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body data-page="home">
+
+  <div id="site-loader">
+    <div class="loader-mark">
+      <span>Jeff Goldblum</span>
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
+  <div id="site-header"></div>
+
+  <main>
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <svg width="0" height="0" style="position:absolute">
+        <filter id="grainFilter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="noise"/>
+          <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.03 0"/>
+        </filter>
+      </svg>
+      <div class="hero-figure" aria-hidden="true">
+        <svg viewBox="0 0 700 560" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="figGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7c1f2c" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#c9a24b" stop-opacity="0.12"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="350" cy="620" rx="230" ry="260" fill="url(#figGrad)"/>
+          <ellipse cx="350" cy="230" rx="120" ry="150" fill="url(#figGrad)"/>
+          <rect x="0" y="0" width="700" height="560" filter="url(#grainFilter)" opacity="0.5"/>
+        </svg>
+      </div>
+      <rect class="grain" style="filter:url(#grainFilter)"></rect>
+      <div class="container hero-content">
+        <span class="eyebrow">New Album — Out Now</span>
+        <h1 class="hero-name">Jeff<br/>Goldblum</h1>
+        <p class="hero-desc">Autumn Static is the sound of a studio door closing at 3am. Eleven songs about staying, leaving, and everything in the hallway between.</p>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-primary" data-chat-trigger>Start a Conversation</a>
+          <a href="#release" class="btn btn-ghost">Listen Now</a>
+        </div>
+      </div>
+      <div class="hero-scroll-cue">Scroll</div>
+    </section>
+
+    <section id="release">
+      <div class="container">
+        <div class="reveal release-panel">
+          <div class="release-art">
+            <img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/592x592bb.webp" alt="Autumn Static album cover" />
+          </div>
+          <div>
+            <span class="eyebrow">Latest Release</span>
+            <h2 class="section-title">Night Blooms</h2>
+            <p class="section-lede">12 tracks. One long exhale.</p>
+            <ul class="tracklist">
+              <li><span class="catalog-num">VC—001</span><span class="t-name">Misty</span><span class="t-len">4:10</span></li>
+              <li><span class="catalog-num">VC—002</span><span class="t-name">Bewitched, Bothered And Bewildered</span><span class="t-len">4:16</span></li>
+              <li><span class="catalog-num">VC—003</span><span class="t-name">If I Only Had A Brain</span><span class="t-len">3:10</span></li>
+              <li><span class="catalog-num">VC—004</span><span class="t-name">Over The Rainbow</span><span class="t-len">4:43</span></li>
+              <li><span class="catalog-num">VC—005</span><span class="t-name">Mean To Me</span><span class="t-len">3:04</span></li>
+            </ul>
+            <div class="hero-ctas" style="margin-top:28px;">
+              <a href="https://music.apple.com/us/album/night-blooms/1883723520" class="btn btn-ghost">Stream</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery-preview">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow">Visual Reel</span>
+            <h2 class="section-title">Gallery</h2>
+          </div>
+        </div>
+        <div class="grid grid-4 reveal-stagger">
+          <div class="card"><div class="card-media"><img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/3e6c2e6cf5fe963fc96a0af962eaf2a7.jpg" alt="Gallery photo 1" /></div></div>
+          <div class="card"><div class="card-media"><img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/0c24d526d3c1c1dbf74ffb4d46e9ba77.jpg" alt="Gallery photo 2" /></div></div>
+          <div class="card"><div class="card-media"><img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/504b4b448da6a7a6a231a4f4dd983145.jpg" alt="Gallery photo 3" /></div></div>
+          <div class="card"><div class="card-media"><img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/927ddafc388bdc9594051387efa41255.jpg" alt="Gallery photo 4" /></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="videos-preview">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow">Watch</span>
+            <h2 class="section-title">Latest Videos</h2>
+          </div>
+        </div>
+        <div class="grid grid-3 reveal-stagger">
+          <div class="card">
+            <div class="card-media wide"><img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/Screenshot%202026-07-16%20102032.jpg" alt="Hallway Light official video thumbnail" /></div>
+            <div class="card-body"><span class="catalog-num">VC—VID 01</span><h3>My Baby Just Cares For Me (Official Video)</h3></div>
+          </div>
+          <div class="card">
+            <div class="card-media wide"><img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/Screenshot%202026-07-16%20102322.jpg" alt="Autumn Static visualizer thumbnail" /></div>
+            <div class="card-body"><span class="catalog-num">VC—VID 02</span><h3>Jeff Goldblum & The Mildred Snitzer Orchestra - Ev'ry Time We Say Goodbye (Official Video)</h3></div>
+          </div>
+          <div class="card">
+            <div class="card-media wide"><img src="https://raw.githubusercontent.com/steve-bannon/pics/refs/heads/main/Screenshot%202026-07-16%20102449.jpg" alt="Studio Notes Episode 1 thumbnail" /></div>
+            <div class="card-body"><span class="catalog-num">VC—VID 03</span><h3>The Best Is Yet To Come (ft. Scarlett Johansson) [Official Lyric Video]</h3></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="chat-cta">
+      <div class="container">
+        <div class="reveal" style="text-align:center; max-width: 620px; margin: 0 auto;">
+          <span class="eyebrow" style="justify-content:center;">Direct Line</span>
+          <h2 class="section-title">Talk to the Artist</h2>
+          <p class="section-lede" style="margin-left:auto; margin-right:auto;">Send a message to Jeff Goldblum</p>
+          <a href="#" class="btn btn-primary" style="margin-top:28px;" data-chat-trigger>Start Chat</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/shared.js"></script>
+</body>
+</html>

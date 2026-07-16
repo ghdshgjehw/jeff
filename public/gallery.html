@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gallery — Jeff Goldblum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body data-page="gallery">
+
+  <div id="site-loader"><div class="loader-mark"><span>Jeff Goldblum</span><div class="loader-bar"></div></div></div>
+  <div id="site-header"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Visual Reel</span>
+        <h1>Gallery</h1>
+        <p>Stills from the studio, the road, and everywhere in between.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="gallery-grid reveal-stagger" id="gallery-items"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/shared.js"></script>
+  <script>
+    // Generated gradient "photos" — deterministic palette variations, no stock imagery.
+    const swatches = [
+      "linear-gradient(160deg,#7c1f2c,#1a1919)",
+      "linear-gradient(200deg,#c9a24b,#1a1919 65%)",
+      "linear-gradient(140deg,#2a1013,#7c1f2c 70%)",
+      "linear-gradient(180deg,#1a1919,#a52d3d 80%)",
+      "linear-gradient(210deg,#0a0a0c,#c9a24b 90%)",
+      "linear-gradient(120deg,#7c1f2c,#c9a24b 85%)",
+      "linear-gradient(190deg,#1a1919,#7c1f2c 60%,#c9a24b)",
+      "linear-gradient(150deg,#2a1013,#a52d3d)",
+      "linear-gradient(170deg,#0a0a0c,#7c1f2c 75%)",
+      "linear-gradient(220deg,#c9a24b,#2a1013 80%)",
+      "linear-gradient(130deg,#a52d3d,#1a1919)",
+      "linear-gradient(160deg,#1a1919,#c9a24b 40%,#7c1f2c)",
+    ];
+    const captions = [
+      "Studio, 2am", "Backstage, Nashville", "Tour van, somewhere in Ohio",
+      "Soundcheck", "Porch session", "Vinyl pressing plant",
+      "Green room", "Rehearsal, day one", "Between takes",
+      "Load-in", "Encore", "Last light, last show"
+    ];
+    const mount = document.getElementById("gallery-items");
+    swatches.forEach((bg, i) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `<div class="card-media" style="background:${bg}"></div><div class="card-body"><span class="catalog-num">VC—IMG ${String(i+1).padStart(3,"0")}</span><h3 style="font-size:1rem;">${captions[i]}</h3></div>`;
+      mount.appendChild(div);
+    });
+  </script>
+</body>
+</html>

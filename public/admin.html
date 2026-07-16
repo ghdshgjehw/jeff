@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Admin Dashboard - Jeff Goldblum</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <div id="admin-login-screen">
+    <div class="admin-login-card">
+      <span class="eyebrow">Studio Access</span>
+      <h1>Admin Login</h1>
+      <p>Sign in to reply to fans directly.</p>
+      <input id="key-input" type="password" placeholder="Admin key" />
+      <div id="admin-error"></div>
+      <button class="btn btn-primary" id="login-btn">Log in</button>
+    </div>
+  </div>
+
+  <div id="admin-dashboard">
+    <div id="admin-sidebar">
+      <div id="admin-sidebar-header">
+        <span class="brand">Jeff Goldblum</span>
+        <div class="eyebrow" style="margin-top:8px;">Conversations</div>
+      </div>
+      <div id="admin-user-list"></div>
+    </div>
+    <div id="admin-main">
+      <div id="admin-chat-header">
+        <span id="admin-chat-title">Select a conversation</span>
+        <span class="ah-status" id="admin-chat-status"></span>
+      </div>
+      <div id="admin-messages" style="display:none"></div>
+      <div id="admin-placeholder">No user selected</div>
+      <form id="admin-send-form" style="display:none">
+        <input id="text-input" placeholder="Type a reply…" autocomplete="off" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // If this page isn't being served by the real Node server (e.g. opened
+    // as a static file, or previewed without `npm start` running), the
+    // socket.io client script above won't load and `io` won't exist.
+    // Fail with a clear message instead of an uncaught error.
+    if (typeof io === "undefined") {
+      document.body.innerHTML = `
+        <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; font-family:system-ui, sans-serif; background:#0a0a0c; color:#f3efe9; text-align:center;">
+          <div style="max-width:420px;">
+            <h1 style="font-size:1.3rem; margin-bottom:12px;">Server not running</h1>
+            <p style="color:#a39d95; font-size:0.95rem; line-height:1.6;">
+              This page needs the real backend server to work — it can't be viewed as a static file preview.
+              Run <code style="background:#1a1919; padding:2px 6px; border-radius:4px;">npm install</code> then
+              <code style="background:#1a1919; padding:2px 6px; border-radius:4px;">npm start</code>,
+              then open this page at <code style="background:#1a1919; padding:2px 6px; border-radius:4px;">http://localhost:3000/admin.html</code>.
+            </p>
+          </div>
+        </div>`;
+      throw new Error("socket.io client not loaded — server is not running.");
+    }
+
+    // Match whatever theme the main site is currently set to.
+    document.documentElement.setAttribute("data-theme", localStorage.getItem("wc_theme") || "dark");
+
+    const socket = io();
+
+    const loginScreen = document.getElementById("admin-login-screen");
+    const keyInput = document.getElementById("key-input");
+    const loginBtn = document.getElementById("login-btn");
+    const errorDiv = document.getElementById("admin-error");
+    const dashboard = document.getElementById("admin-dashboard");
+    const userListEl = document.getElementById("admin-user-list");
+    const chatTitle = document.getElementById("admin-chat-title");
+    const chatStatus = document.getElementById("admin-chat-status");
+    const messagesEl = document.getElementById("admin-messages");
+    const placeholder = document.getElementById("admin-placeholder");
+    const sendForm = document.getElementById("admin-send-form");
+    const textInput = document.getElementById("text-input");
+
+    // users: { [id]: { id, name, online, unread } }
+    const users = {};
+    // conversation cache per user id, filled in from user_history / live events
+    const conversations = {};
+    let activeUserId = null;
+
+    function formatTime(ts) {
+      if (!ts) return "";
+      return new Date(ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    }
+
+    loginBtn.addEventListener("click", () => {
+      socket.emit("admin_login", { key: keyInput.value });
+    });
+    keyInput.addEventListener("keydown", (e) => { if (e.key === "Enter") loginBtn.click(); });
+
+    socket.on("admin_login_result", ({ ok, error }) => {
+      if (!ok) {
+        errorDiv.textContent = error || "Login failed";
+        return;
+      }
+      loginScreen.style.display = "none";
+      dashboard.classList.add("active");
+    });
+
+    socket.on("user_list", (list) => {
+      list.forEach((u) => { users[u.id] = { ...u, unread: u.unread || 0 }; });
+      renderUserList();
+    });
+
+    socket.on("user_online", (u) => {
+      users[u.id] = { ...(users[u.id] || {}), ...u, online: true, unread: (users[u.id] && users[u.id].unread) || 0 };
+      renderUserList();
+    });
+
+    socket.on("user_offline", ({ id }) => {
+      if (users[id]) users[id].online = false;
+      renderUserList();
+    });
+
+    socket.on("unread_update", ({ userId, unread }) => {
+      if (users[userId]) users[userId].unread = unread;
+      renderUserList();
+    });
+
+    socket.on("user_history", ({ userId, history }) => {
+      conversations[userId] = history.map((m) => ({
+        text: m.text,
+        who: m.sender === "admin" ? "mine" : "theirs",
+        ts: m.ts,
+      }));
+      if (activeUserId === userId) renderMessages();
+    });
+
+    socket.on("message_from_user", (msg) => {
+      conversations[msg.from] = conversations[msg.from] || [];
+      conversations[msg.from].push({ text: msg.text, who: "theirs", ts: msg.ts });
+      if (activeUserId === msg.from) renderMessages();
+    });
+
+    socket.on("admin_message_sent", (msg) => {
+      conversations[msg.toUserId] = conversations[msg.toUserId] || [];
+      conversations[msg.toUserId].push({ text: msg.text, who: "mine", ts: msg.ts });
+      if (activeUserId === msg.toUserId) renderMessages();
+    });
+
+    function renderUserList() {
+      userListEl.innerHTML = "";
+      const ids = Object.keys(users);
+      if (ids.length === 0) {
+        userListEl.innerHTML = '<div class="admin-empty-note">No users yet</div>';
+        return;
+      }
+      ids.sort((a, b) => {
+        const ua = users[a], ub = users[b];
+        if ((ub.unread > 0 ? 1 : 0) !== (ua.unread > 0 ? 1 : 0)) return (ub.unread > 0 ? 1 : 0) - (ua.unread > 0 ? 1 : 0);
+        return (ub.online ? 1 : 0) - (ua.online ? 1 : 0);
+      });
+      ids.forEach((id) => {
+        const u = users[id];
+        const div = document.createElement("div");
+        div.className = "admin-user-item" + (id === activeUserId ? " active" : "");
+
+        const left = document.createElement("div");
+        left.className = "admin-user-left";
+        const dot = document.createElement("span");
+        dot.className = "admin-status-dot " + (u.online ? "online" : "offline");
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "admin-user-name";
+        nameSpan.textContent = u.name;
+        left.appendChild(dot);
+        left.appendChild(nameSpan);
+        div.appendChild(left);
+
+        if (u.unread > 0) {
+          const badge = document.createElement("span");
+          badge.className = "admin-unread-badge";
+          badge.textContent = u.unread > 9 ? "9+" : u.unread;
+          div.appendChild(badge);
+        }
+
+        div.addEventListener("click", () => selectUser(id));
+        userListEl.appendChild(div);
+      });
+    }
+
+    function selectUser(id) {
+      activeUserId = id;
+      chatTitle.textContent = users[id].name;
+      chatStatus.textContent = (users[id].email || "") + " · " + (users[id].online ? "Online" : "Offline");
+      messagesEl.style.display = "flex";
+      sendForm.style.display = "flex";
+      placeholder.style.display = "none";
+      if (users[id]) users[id].unread = 0; // optimistic; server confirms via unread_update
+      renderUserList();
+      socket.emit("admin_select_user", { userId: id });
+      renderMessages();
+    }
+
+    function renderMessages() {
+      messagesEl.innerHTML = "";
+      (conversations[activeUserId] || []).forEach((m) => {
+        const div = document.createElement("div");
+        div.className = "admin-msg " + (m.who === "mine" ? "mine" : "theirs");
+        const label = document.createElement("span");
+        label.className = "am-label";
+        label.textContent = m.who === "mine" ? "You" : users[activeUserId]?.name || "User";
+        div.appendChild(label);
+        const body = document.createElement("div");
+        body.textContent = m.text;
+        div.appendChild(body);
+        const time = document.createElement("span");
+        time.className = "am-time";
+        time.textContent = formatTime(m.ts);
+        div.appendChild(time);
+        messagesEl.appendChild(div);
+      });
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    sendForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = textInput.value.trim();
+      if (!text || !activeUserId) return;
+      socket.emit("admin_message", { toUserId: activeUserId, text });
+      textInput.value = "";
+    });
+  </script>
+</body>
+</html>

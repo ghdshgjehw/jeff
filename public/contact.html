@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contact — Jeff Goldblum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body data-page="contact">
+
+  <div id="site-loader"><div class="loader-mark"><span>Jeff Goldblum</span><div class="loader-bar"></div></div></div>
+  <div id="site-header"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Get in Touch</span>
+        <h1>Contact</h1>
+        <p>Booking, press, or just a note — pick whichever's easiest.</p>
+      </div>
+    </section>
+
+    <section style="padding-top:20px;">
+      <div class="container">
+        <div class="contact-layout">
+          <div class="reveal">
+            <form id="contact-form">
+              <div class="form-field">
+                <label for="c-name">Name</label>
+                <input id="c-name" type="text" required maxlength="80" />
+              </div>
+              <div class="form-field">
+                <label for="c-email">Email</label>
+                <input id="c-email" type="email" required maxlength="120" />
+              </div>
+              <div class="form-field">
+                <label for="c-reason">Reason</label>
+                <select id="c-reason">
+                  <option>General</option>
+                  <option>Booking</option>
+                  <option>Press</option>
+                  <option>Licensing</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="c-message">Message</label>
+                <textarea id="c-message" required maxlength="2000"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Send Message</button>
+              <p class="form-note" id="contact-status"></p>
+            </form>
+          </div>
+
+          <div class="reveal">
+            <div class="contact-alt">
+              <h3>Prefer to chat?</h3>
+              <p>For quick questions, the direct chat usually gets you an answer faster than email.</p>
+              <a href="#" class="btn btn-primary" data-chat-trigger>Open Chat</a>
+            </div>
+            <div class="contact-alt" style="margin-top:20px;">
+              <h3>Booking & Press</h3>
+              <p>For formal inquiries, reach the team at the addresses below.</p>
+              <div class="footer-col">
+                <a href="mailto:booking@wrencassidy.example">booking@wrencassidy.example</a>
+                <a href="mailto:press@wrencassidy.example">press@wrencassidy.example</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/shared.js"></script>
+  <script>
+    // Demo-only: this form has no backend endpoint wired up yet.
+    document.getElementById("contact-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("contact-status").textContent =
+        "This form isn't connected to an inbox yet — use chat for a live reply.";
+    });
+  </script>
+</body>
+</html>
