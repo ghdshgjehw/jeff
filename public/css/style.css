@@ -1,6 +1,4 @@
-/* ==========================================================================
-   WREN CASSIDY — design tokens & shared styles
-   ========================================================================== */
+
 
 :root {
   --bg: #0a0a0c;
@@ -497,7 +495,19 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 32px; margin-top: 
 #admin-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 #admin-chat-header {
   padding: 20px 26px; border-bottom: 1px solid var(--border); font-family: var(--font-display); font-size: 1.2rem;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 14px; justify-content: space-between;
+}
+#admin-back-btn {
+  display: none; background: none; border: none; color: var(--text); font-size: 1.3rem; cursor: pointer;
+  padding: 4px 8px; line-height: 1; flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+  #admin-sidebar { width: 100%; }
+  #admin-main { display: none; }
+  #admin-back-btn { display: inline-block; }
+  #admin-dashboard.chat-open #admin-sidebar { display: none; }
+  #admin-dashboard.chat-open #admin-main { display: flex; }
 }
 #admin-chat-header .ah-status { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; }
 #admin-messages { flex: 1; overflow-y: auto; padding: 26px; display: flex; flex-direction: column; gap: 12px; }
@@ -520,11 +530,6 @@ footer { border-top: 1px solid var(--border); padding: 64px 0 32px; margin-top: 
   font-weight: 600; transition: background 0.2s;
 }
 #admin-send-form button:hover { background: var(--accent-bright); }
-
-@media (max-width: 720px) {
-  #admin-sidebar { width: 100%; position: absolute; inset: 0; z-index: 2; }
-  #admin-dashboard.active { position: relative; }
-}
 
 /* Chat widget message timestamp */
 .chat-msg .cm-time { display: block; font-size: 10px; opacity: 0.6; margin-top: 5px; font-family: var(--font-mono); text-align: right; }
