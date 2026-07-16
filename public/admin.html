@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Admin Dashboard - Jeff Goldblum</title>
+<title>Admin Dashboard —  Jeff Goldblum</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,6 +32,7 @@
     </div>
     <div id="admin-main">
       <div id="admin-chat-header">
+        <button id="admin-back-btn" type="button" aria-label="Back to conversations">&#8592;</button>
         <span id="admin-chat-title">Select a conversation</span>
         <span class="ah-status" id="admin-chat-status"></span>
       </div>
@@ -79,6 +80,7 @@
     const userListEl = document.getElementById("admin-user-list");
     const chatTitle = document.getElementById("admin-chat-title");
     const chatStatus = document.getElementById("admin-chat-status");
+    const backBtn = document.getElementById("admin-back-btn");
     const messagesEl = document.getElementById("admin-messages");
     const placeholder = document.getElementById("admin-placeholder");
     const sendForm = document.getElementById("admin-send-form");
@@ -201,7 +203,12 @@
       renderUserList();
       socket.emit("admin_select_user", { userId: id });
       renderMessages();
+      dashboard.classList.add("chat-open"); // on mobile: swap from list view to full-screen chat
     }
+
+    backBtn.addEventListener("click", () => {
+      dashboard.classList.remove("chat-open"); // on mobile: return to the conversation list
+    });
 
     function renderMessages() {
       messagesEl.innerHTML = "";
